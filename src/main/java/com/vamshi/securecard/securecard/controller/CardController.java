@@ -1,7 +1,9 @@
 package com.vamshi.securecard.securecard.controller;
 
 import com.vamshi.securecard.securecard.models.Card;
+import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.service.CardService;
+import com.vamshi.securecard.securecard.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,9 @@ public class CardController {
     @Autowired
     CardService cs;
 
+    @Autowired
+    UserService us;
+
     @GetMapping
     public List<Card> getAllCards() {
         return cs.getAllCards();
@@ -26,10 +31,21 @@ public class CardController {
         return card.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Card saveCard(@RequestBody Card card) {
+    @PostMapping()
+    public Card createCard(@RequestBody Card card) {
+
+        // 🔥 Extract userId safely
+        int userId = card.getUser().getId();
+
+        // 🔥 Fetch MANAGED user
+        User managedUser = us.getById(userId);
+
+        // 🔥 Replace detached user with managed user
+        card.setUser(managedUser);
+
         return cs.saveCard(card);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Card> updateCard(@PathVariable String id, @RequestBody Card card) {

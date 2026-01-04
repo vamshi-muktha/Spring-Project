@@ -3,12 +3,15 @@ package com.vamshi.securecard.securecard.service;
 import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     UserRepo ur;
 
@@ -33,4 +36,19 @@ public class UserService {
     public void delete(int id) {
         ur.deleteById(id);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return ur.findByUsername(username);
+    }
+
+	public boolean existsByUsername(String email) {
+		// TODO Auto-generated method stub
+		return ur.existsByUsername(email);
+	}
+
+	public boolean existsByEmail(String email) {
+		// TODO Auto-generated method stub
+		return ur.existsByEmail(email);
+	}
 }
