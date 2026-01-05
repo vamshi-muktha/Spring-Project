@@ -13,6 +13,8 @@ public class Card {
 	
 	
 	
+	
+	
     @Id
     private String cardNumber;
     private String cardName;
