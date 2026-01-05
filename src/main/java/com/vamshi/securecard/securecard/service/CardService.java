@@ -1,6 +1,7 @@
 package com.vamshi.securecard.securecard.service;
 
 import com.vamshi.securecard.securecard.models.Card;
+import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.repository.CardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,4 +34,9 @@ public class CardService {
     public void deleteCard(String id) {
         cr.deleteById(id);
     }
+
+	public List<Card> findByUser(User user) {
+		// TODO Auto-generated method stub
+		return cr.findByUser(user);
+	}
 }

@@ -9,11 +9,8 @@
 
 <form action="/register" method="POST">
 
-    <!-- CSRF token -->
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
-    <label>ID:</label>
-    <input type="number" name="id" required /><br/>
 
     <label>Name:</label>
     <input type="text" name="name" required /><br/>
@@ -22,8 +19,11 @@
     <input type="text" name="username" required /><br/>
 	
 	<label>Email:</label>
-	    <input type="text" name="email" required /><br/>
+	<input type="text" name="email" required /><br/>
 
+	<label>Date of Birth:</label>
+	<input type="Date" name="dob" required /><br/>
+	
     <label>Password:</label>
     <input type="password" name="password" required /><br/>
 

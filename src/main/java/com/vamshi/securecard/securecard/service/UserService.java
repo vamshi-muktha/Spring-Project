@@ -51,4 +51,9 @@ public class UserService implements UserDetailsService {
 		// TODO Auto-generated method stub
 		return ur.existsByEmail(email);
 	}
+
+	public User findByUsername(String username) {
+		// TODO Auto-generated method stub
+		return ur.findByUsername(username);
+	}
 }

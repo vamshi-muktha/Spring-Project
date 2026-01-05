@@ -16,10 +16,18 @@ public class Card {
 	
 	
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int cid;
     private String cardNumber;
     private String cardName;
     private String cardExpiry;
     private String cardCVV;
+    private String type;
+    private String PAN;
+    private String empStatus;
+    private String monthlyIncome;
+    private String cardType;
+    private boolean isActive;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

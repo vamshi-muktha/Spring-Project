@@ -45,9 +45,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             user.setUsername(email);
             user.setEmail(email);
             user.setName(name);
-            user.setPassword(UUID.randomUUID().toString());
+            user.setPassword("Default Password");
             user.setOriginalPassword("GOOGLE");
             user.setRole("USER");
+            user.setAddress("Default");
+            user.setMobileNumber("9090909090");
 
             userService.create(user);
         }
