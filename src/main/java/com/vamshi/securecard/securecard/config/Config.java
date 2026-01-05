@@ -17,9 +17,6 @@ public class Config {
 
     @Autowired
     private UserDetailsService uds;
-    
-    
-    
     @Autowired
 	private OAuthSuccessHandler oAuthSuccessHandler;
 
