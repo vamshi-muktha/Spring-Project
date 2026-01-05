@@ -10,6 +10,7 @@ import org.hibernate.engine.internal.Cascade;
 @Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cardNumber")
 public class Card {
+	
     @Id
     private String cardNumber;
     private String cardName;
