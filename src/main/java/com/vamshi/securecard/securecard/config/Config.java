@@ -20,6 +20,9 @@ public class Config {
     @Autowired
 	private OAuthSuccessHandler oAuthSuccessHandler;
 
+    
+    
+    
     @Bean
     public DaoAuthenticationProvider authicate() {
         DaoAuthenticationProvider dp = new DaoAuthenticationProvider(uds);
