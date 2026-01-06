@@ -19,7 +19,7 @@ public class CardService {
         return cr.findAll();
     }
 
-    public Optional<Card> getCardById(String id) {
+    public Optional<Card> getCardById(int id) {
         return cr.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class CardService {
         return cr.save(card);
     }
 
-    public void deleteCard(String id) {
+    public void deleteCard(int id) {
         cr.deleteById(id);
     }
 

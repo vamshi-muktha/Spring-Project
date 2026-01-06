@@ -37,7 +37,7 @@ public class CardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Card> getCardById(@PathVariable String id) {
+    public ResponseEntity<Card> getCardById(@PathVariable int id) {
         Optional<Card> card = cs.getCardById(id);
         return card.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -67,9 +67,9 @@ public class CardController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Card> updateCard(@PathVariable String id, @RequestBody Card card) {
+    public ResponseEntity<Card> updateCard(@PathVariable int id, @RequestBody Card card) {
         if (cs.getCardById(id).isPresent()) {
-            card.setCardNumber(id);
+            card.setCardNumber("");
             return ResponseEntity.ok(cs.updateCard(card));
         } else {
             return ResponseEntity.notFound().build();
@@ -77,7 +77,7 @@ public class CardController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCard(@PathVariable String id) {
+    public ResponseEntity<Void> deleteCard(@PathVariable int id) {
         if (cs.getCardById(id).isPresent()) {
             cs.deleteCard(id);
             return ResponseEntity.noContent().build();

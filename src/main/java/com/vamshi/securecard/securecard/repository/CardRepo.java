@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CardRepo extends JpaRepository<Card, String> {
+public interface CardRepo extends JpaRepository<Card, Integer> {
 
 	List<Card> findByUser(User user);
 
