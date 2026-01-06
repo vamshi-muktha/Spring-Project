@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserDetails {
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id

@@ -2,7 +2,6 @@ package com.vamshi.securecard.securecard.config;
 
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 	@Autowired
     UserService userService;
 
-    
+
 
     @Override
     public void onAuthenticationSuccess(

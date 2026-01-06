@@ -31,6 +31,12 @@ public class CardController {
     @Autowired
     UserService us;
 
+    
+    @GetMapping("/api/test")
+    public String testApi() {
+        return "Backend working";
+    }
+    
     @GetMapping
     public List<Card> getAllCards() {
         return cs.getAllCards();
@@ -41,7 +47,7 @@ public class CardController {
         Optional<Card> card = cs.getCardById(id);
         return card.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    
+
     @GetMapping("/mycards")
     public ResponseEntity<List<Card>> getMyCards() {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -24,7 +24,7 @@ public class JspController {
 
 	@Autowired
 	UserService service;
-	
+
 	@Autowired
 	CardService cs;
 
@@ -42,10 +42,15 @@ public class JspController {
 	public String getRegister() {
 		return "register";
 	}
-	
+
 	@GetMapping("/cardform")
 	public String getCardForm() {
 		return "cardform";
+	}
+	
+	@GetMapping("/external")
+	public String getExternal() {
+		return "external";
 	}
 
 	@PostMapping("/register")
@@ -63,14 +68,14 @@ public class JspController {
 		u.setRole("USER");
 		u.setPassword(enc);
 		u.setOriginalPassword(user.getPassword());
-	
+
 
 		service.create(u);
 
 		model.addAttribute("msg", "Registration successful. Please login.");
 		return "login";
 	}
-	
+
 	@PostMapping("/applyCard")
 	public String applyCard(@ModelAttribute CardDto card, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -80,7 +85,7 @@ public class JspController {
 		BeanUtils.copyProperties(card, c);
 		c.setCardExpiry("01/2030");
 		User u = service.findByUsername(username);
-		
+
 		c.setUser(u);
 		c.setCardName(u.getName());
 		long cardNumber = (long) (Math.random() * 9_000_000_000_000L) + 1_000_000_000_000L;
@@ -91,7 +96,9 @@ public class JspController {
 		cs.saveCard(c);
 		model.addAttribute("msg", "Card Applied successfully");
 		return "Home";
-		
+
 	}
+	
+	
 
 }

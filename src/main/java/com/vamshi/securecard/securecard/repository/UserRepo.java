@@ -1,7 +1,8 @@
 package com.vamshi.securecard.securecard.repository;
 
-import com.vamshi.securecard.securecard.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.vamshi.securecard.securecard.models.User;
 
 public interface UserRepo extends JpaRepository<User, Integer> {
 
