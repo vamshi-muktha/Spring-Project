@@ -23,7 +23,7 @@ public class PaymentController {
 	PaymentService ps;
 	@Autowired
 	UserService us;
-	
+
 	@PostMapping
 	public String newPayment(@RequestParam int orderId, @RequestParam int amount) {
 		Payment p = new Payment();
@@ -33,19 +33,19 @@ public class PaymentController {
 		p.setAmount(amount);
 		p.setStatus("pending");
 		p.setUid(us.findByUsername(username).getId());
-		ps.savePayment(p);   
+		ps.savePayment(p);
 		return "payment saved successfully";
 	}
-	
+
 	@GetMapping("/getPending")
 	public List<Payment> getPending(@RequestParam int uid){
 		return ps.getPending(uid, "pending");
 	}
-	
+
 	@PutMapping("/payNow")
 	public int changePayment(@RequestParam int pid, @RequestParam String status) {
-		
+
 		return ps.changePayment(pid, status);
-		
+
 	}
 }

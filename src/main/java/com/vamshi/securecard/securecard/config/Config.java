@@ -82,7 +82,7 @@ public class Config {
 
         return http.build();
     }
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 

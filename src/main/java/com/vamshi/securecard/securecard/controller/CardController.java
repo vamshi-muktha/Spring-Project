@@ -31,12 +31,12 @@ public class CardController {
     @Autowired
     UserService us;
 
-    
+
     @GetMapping("/api/test")
     public String testApi() {
         return "Backend working";
     }
-    
+
     @GetMapping
     public List<Card> getAllCards() {
         return cs.getAllCards();
