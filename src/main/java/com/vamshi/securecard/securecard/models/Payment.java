@@ -4,6 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,13 +17,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Payment {
+	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pid;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int pid;
+
+	@NotNull
+	@Min(value = 1, message = "Order ID must be a positive number")
 	private int orderId;
+
+	@NotNull
+	@Min(value = 1, message = "Amount must be greater than 0")
 	private int amount;
+
+	@NotBlank
+	@Pattern(regexp = "^(PENDING|SUCCESS|FAILED|CANCELLED)$", message = "Status must be PENDING, SUCCESS, FAILED, or CANCELLED")
 	private String status;
+
+	@NotNull
+	@Min(value = 1, message = "User ID must be a positive number")
 	private int uid;
+
+	@NotNull
+	@Min(value = 1, message = "Card ID must be a positive number")
 	private int cardId;
 
 }

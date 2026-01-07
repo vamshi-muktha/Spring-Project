@@ -22,73 +22,73 @@ import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.service.CardService;
 import com.vamshi.securecard.securecard.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/cards")
 public class CardController {
-    @Autowired
-    CardService cs;
+	@Autowired
+	CardService cs;
 
-    @Autowired
-    UserService us;
+	@Autowired
+	UserService us;
 
+	@GetMapping("/api/test")
+	public String testApi() {
+		return "Backend working";
+	}
 
-    @GetMapping("/api/test")
-    public String testApi() {
-        return "Backend working";
-    }
+	@GetMapping
+	public List<Card> getAllCards() {
+		return cs.getAllCards();
+	}
 
-    @GetMapping
-    public List<Card> getAllCards() {
-        return cs.getAllCards();
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<Card> getCardById(@PathVariable int id) {
+		Optional<Card> card = cs.getCardById(id);
+		return card.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Card> getCardById(@PathVariable int id) {
-        Optional<Card> card = cs.getCardById(id);
-        return card.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/mycards")
-    public ResponseEntity<List<Card>> getMyCards() {
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	@GetMapping("/mycards")
+	public ResponseEntity<List<Card>> getMyCards() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = auth.getName();
-        List<Card> cards = cs.findByUser(us.findByUsername(username));
-        return new ResponseEntity<>(cards, HttpStatus.OK);
-    }
+		List<Card> cards = cs.findByUser(us.findByUsername(username));
+		return new ResponseEntity<>(cards, HttpStatus.OK);
+	}
 
-    @PostMapping()
-    public Card createCard(@RequestBody Card card) {
+	@PostMapping()
+	public Card createCard(@Valid @RequestBody Card card) {
 
-        // 🔥 Extract userId safely
-        int userId = card.getUser().getId();
+		// 🔥 Extract userId safely
+		int userId = card.getUser().getId();
 
-        // 🔥 Fetch MANAGED user
-        User managedUser = us.getById(userId);
+		// 🔥 Fetch MANAGED user
+		User managedUser = us.getById(userId);
 
-        // 🔥 Replace detached user with managed user
-        card.setUser(managedUser);
+		// 🔥 Replace detached user with managed user
+		card.setUser(managedUser);
 
-        return cs.saveCard(card);
-    }
+		return cs.saveCard(card);
+	}
 
+	@PutMapping("/{id}")
+	public ResponseEntity<Card> updateCard(@PathVariable int id, @Valid @RequestBody Card card) {
+		if (cs.getCardById(id).isPresent()) {
+			card.setCardNumber("");
+			return ResponseEntity.ok(cs.updateCard(card));
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Card> updateCard(@PathVariable int id, @RequestBody Card card) {
-        if (cs.getCardById(id).isPresent()) {
-            card.setCardNumber("");
-            return ResponseEntity.ok(cs.updateCard(card));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCard(@PathVariable int id) {
-        if (cs.getCardById(id).isPresent()) {
-            cs.deleteCard(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteCard(@PathVariable int id) {
+		if (cs.getCardById(id).isPresent()) {
+			cs.deleteCard(id);
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 }

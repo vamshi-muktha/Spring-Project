@@ -10,6 +10,8 @@ import com.vamshi.securecard.securecard.models.Card;
 import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.repository.CardRepo;
 
+import jakarta.validation.Valid;
+
 @Service
 public class CardService {
 
@@ -24,11 +26,11 @@ public class CardService {
         return cr.findById(id);
     }
 
-    public Card saveCard(Card card) {
+    public Card saveCard(@Valid Card card) {
         return cr.save(card);
     }
 
-    public Card updateCard(Card card) {
+    public Card updateCard(@Valid Card card) {
         return cr.save(card);
     }
 
