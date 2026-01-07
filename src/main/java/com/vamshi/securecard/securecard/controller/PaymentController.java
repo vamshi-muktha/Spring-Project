@@ -19,8 +19,10 @@ import com.vamshi.securecard.securecard.service.UserService;
 @RestController
 @RequestMapping("/payment")
 public class PaymentController {
+	
 	@Autowired
 	PaymentService ps;
+	
 	@Autowired
 	UserService us;
 
@@ -38,7 +40,7 @@ public class PaymentController {
 	}
 
 	@GetMapping("/getPending")
-	public List<Payment> getPending(@RequestParam int uid){
+	public List<Payment> getPending(@RequestParam int uid) {
 		return ps.getPending(uid, "pending");
 	}
 
