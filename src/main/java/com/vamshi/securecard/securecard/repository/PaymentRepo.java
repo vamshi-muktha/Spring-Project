@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface PaymentRepo extends JpaRepository<Payment, Integer>{
 
-	
+
 	@Query("SELECT p FROM Payment p WHERE p.uid = :uid AND p.status = :status")
 	List<Payment> findPayments(@Param("uid") int uid,
 	                           @Param("status") String status);

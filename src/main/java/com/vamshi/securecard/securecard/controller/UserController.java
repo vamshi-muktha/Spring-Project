@@ -23,7 +23,7 @@ public class UserController {
 
 	@Autowired
 	UserService service;
-	
+
 	@GetMapping("/getcurruser")
 	public User getCurrUser() {
 		System.out.println("Called>>>");

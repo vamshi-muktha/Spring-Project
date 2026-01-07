@@ -47,7 +47,7 @@ public class JspController {
 	public String getCardForm() {
 		return "cardform";
 	}
-	
+
 	@GetMapping("/external")
 	public String getExternal() {
 		return "external";
@@ -98,7 +98,7 @@ public class JspController {
 		return "Home";
 
 	}
-	
-	
+
+
 
 }

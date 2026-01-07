@@ -15,4 +15,5 @@ public class UserDto {
     private String address;
     private String mobileNumber;
     private String dob;
+	
 }
