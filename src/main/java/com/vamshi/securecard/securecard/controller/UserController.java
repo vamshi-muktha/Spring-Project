@@ -3,6 +3,7 @@ package com.vamshi.securecard.securecard.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,11 +30,22 @@ public class UserController {
 	@Autowired
 	UserService service;
 
+	@GetMapping("/api/auth/check")
+	public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+
+	    if (authentication == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	    }
+
+	    return ResponseEntity.ok(authentication.getPrincipal());
+	}
+	
 	@GetMapping("/getcurruser")
 	public User getCurrUser() {
 		System.out.println("Called>>>");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = auth.getName();
+		System.out.println(username);
 		return service.findByUsername(username);
 	}
 

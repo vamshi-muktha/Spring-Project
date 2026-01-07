@@ -37,11 +37,13 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         System.out.println(oauthUser);
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
+        String googleSub = oauthUser.getAttribute("sub"); // Google unique ID
+
         System.out.println("coming to google");
         if (!userService.existsByEmail(email)) {
         	System.out.println("coming to google and no email");
             User user = new User();
-            user.setUsername(email);
+            user.setUsername(googleSub);
             user.setEmail(email);
             user.setName(name);
             user.setPassword("Default Password");
@@ -49,11 +51,12 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             user.setRole("USER");
             user.setAddress("Default");
             user.setMobileNumber("9090909090");
-
-            userService.create(user);
+            user.setDob("01/01/2000");
+            User x = userService.create(user);
+            System.out.println("Useeee" + x.toString());
         }
 
-        response.sendRedirect("/home");
+        response.sendRedirect("http://localhost:3000/home");
     }
 }
 

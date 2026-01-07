@@ -1,5 +1,6 @@
 package com.vamshi.securecard.securecard.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardDto {
+	@NotBlank(message = "Card type is required")
 	private String type;
-    private String PAN;
-    private String empStatus;
-    private String monthlyIncome;
-    private String cardType;
+
+	@NotBlank(message = "PAN is required")
+	private String PAN;
+
+	@NotBlank(message = "Employment status is required")
+	private String empStatus;
+
+	@NotBlank(message = "Monthly income is required")
+	private String monthlyIncome;
+
+	@NotBlank(message = "Card type selection is required")
+	private String cardType;
 }

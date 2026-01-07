@@ -15,87 +15,66 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 //@EnableWebSecurity
 public class Config {
 
-    @Autowired
-    private UserDetailsService uds;
+	@Autowired
+	private UserDetailsService uds;
 
-
-
-
-    @Autowired
+	@Autowired
 	private OAuthSuccessHandler oAuthSuccessHandler;
 
+	@Bean
+	public DaoAuthenticationProvider authicate() {
+		DaoAuthenticationProvider dp = new DaoAuthenticationProvider(uds);
+		dp.setPasswordEncoder(new BCryptPasswordEncoder());
+		return dp;
+	}
 
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+		http.cors(Customizer.withDefaults())
 
-    @Bean
-    public DaoAuthenticationProvider authicate() {
-        DaoAuthenticationProvider dp = new DaoAuthenticationProvider(uds);
-        dp.setPasswordEncoder(new BCryptPasswordEncoder());
-        return dp;
-    }
+				// 2️⃣ CSRF (disable for SPA)
+				.csrf(csrf -> csrf.disable())
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http
-        		.cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/login",
-                                "/users/register",
-                                "/oauth2/**",
-                                "/login/oauth2/**",
-                                "/WEB-INF/**",
-                                "/register",
-                                "/.well-known/**"
-                        ).permitAll()
+				// 3️⃣ Exception handling (API-friendly)
+				.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				})).authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/users/register", "/oauth2/**",
+						"/login/oauth2/**", "/WEB-INF/**", "/register", "/.well-known/**").permitAll()
 //                        .requestMatchers("/cards").authenticated()
-                        .anyRequest().authenticated()
-                )
+						.anyRequest().authenticated())
 
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home")
-                        .permitAll()
-                )
+				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/home")
+						.permitAll())
 
-                .oauth2Login(oauth -> oauth
-                        .loginPage("/login")
-                        .successHandler(oAuthSuccessHandler)
-                )
+				.oauth2Login(oauth -> oauth.loginPage("/login").successHandler(oAuthSuccessHandler))
 
-                // 🚪 Logout
-                .logout(logout -> logout
-                		 .logoutUrl("/logout")
-                	        .logoutSuccessUrl("/login")
-                	        .invalidateHttpSession(true)
-                	        .clearAuthentication(true)
-                	        .deleteCookies("JSESSIONID")
-                );
+				// 🚪 Logout
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
+						.clearAuthentication(true).deleteCookies("JSESSIONID"));
 
-        return http.build();
-    }
+		return http.build();
+	}
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
 
-        return source;
-    }
+		return source;
+	}
 
 }

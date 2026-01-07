@@ -31,15 +31,9 @@ public class Payment {
 	private int amount;
 
 	@NotBlank
-	@Pattern(regexp = "^(PENDING|SUCCESS|FAILED|CANCELLED)$", message = "Status must be PENDING, SUCCESS, FAILED, or CANCELLED")
 	private String status;
 
-	@NotNull
-	@Min(value = 1, message = "User ID must be a positive number")
 	private int uid;
-
-	@NotNull
-	@Min(value = 1, message = "Card ID must be a positive number")
 	private int cardId;
 
 }

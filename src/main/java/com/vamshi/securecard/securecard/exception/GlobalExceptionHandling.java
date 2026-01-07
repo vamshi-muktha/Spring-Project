@@ -5,45 +5,56 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+import jakarta.validation.ConstraintViolationException;
+
+@RestControllerAdvice
 public class GlobalExceptionHandling {
-
+	
+	
 	@ExceptionHandler(exception = NullPointerException.class)
-	public ResponseEntity<Map<String, String>> handleNullPOinterException(NullPointerException ne) {
-		Map<String, String> map = new HashMap<>();
-		map.put("errorCode", "101");
-		map.put("errorMessage", "There is some null pointer exception");
-		map.put("details", ne.getMessage());
-		return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+	public Map<String, String> handleNpe(NullPointerException ne){
+		Map<String, String> hm = new HashMap<>();
+		hm.put("errorCode", "101");
+		hm.put("errorMessage", "There is some null pointer Exception");
+		hm.put("details", ne.getMessage());
+		return hm;
 	}
-
-	@ExceptionHandler(exception = NumberFormatException.class)
-	public ResponseEntity<Map<String, String>> handleNumberFormatException(NumberFormatException nfe) {
-		Map<String, String> map = new HashMap<>();
-		map.put("errorCode", "102");
-		map.put("errorMessage", "do not give inputs as 0");
-		map.put("details", nfe.getMessage());
-		return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+	
+	@ExceptionHandler(exception = ArithmeticException.class)
+	public Map<String, String> handleAe(ArithmeticException ae){
+		Map<String, String> hm = new HashMap<>();
+		hm.put("errorCode", "102");
+		hm.put("errorMessage", "There is some Arithmetic Exception");
+		hm.put("details", ae.getMessage());
+		return hm;
 	}
-
-	@RestControllerAdvice
-	public class ValidationExceptionHandler {
-
-	    @ExceptionHandler(MethodArgumentNotValidException.class)
-	    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-	        Map<String, String> errors = new HashMap<>();
-	        ex.getBindingResult().getFieldErrors().forEach(error ->
-	            errors.put(error.getField(), error.getDefaultMessage())
-	        );
-	        return ResponseEntity.badRequest().body(Map.of("errors", errors));
-	    }
+	
+	@ExceptionHandler(exception=MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>> handleBeanError(MethodArgumentNotValidException me){
+		Map<String, String> hm = new HashMap<>();
+		BindingResult br = me.getBindingResult();
+		br.getFieldErrors().stream().forEach(x -> hm.put(x.getField(), x.getDefaultMessage()));
+		return new ResponseEntity<>(hm, HttpStatus.OK);
 	}
+	
+//	@ExceptionHandler(ConstraintViolationException.class)
+//	public ResponseEntity<Map<String, String>> handleConstraintViolation(
+//	        ConstraintViolationException ex) {
+//
+//	    Map<String, String> errors = new HashMap<>();
+//
+//	    ex.getConstraintViolations().forEach(v -> {
+//	        String field = v.getPropertyPath().toString();
+//	        errors.put(field, v.getMessage());
+//	    });
+//
+//	    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+//	}
 
-
-
+	
 }
