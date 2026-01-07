@@ -21,5 +21,5 @@ public class Payment {
 	private String status;
 	private int uid;
 	private int cardId;
-	
+
 }
