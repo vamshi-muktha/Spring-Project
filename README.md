@@ -1,5 +1,6 @@
 ## Set application-local.properties
 
+
 spring.datasource.url=jdbc:mysql://localhost:3306/database
 spring.datasource.username=username
 spring.datasource.password=password
