@@ -5,7 +5,6 @@ spring.datasource.username=username
 spring.datasource.password=password
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-
 spring.security.oauth2.client.registration.google.client-id=CLIENT_ID
 spring.security.oauth2.client.registration.google.client-secret=SECRET
 
