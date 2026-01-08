@@ -13,8 +13,8 @@ public class PaymentService {
 	@Autowired
 	PaymentRepo pr;
 
+	
 	public void savePayment(Payment p) {
-		// TODO Auto-generated method stub
 		pr.save(p);
 	}
 
@@ -23,8 +23,8 @@ public class PaymentService {
 		return pr.findPayments(uid, string);
 	}
 
-	public int changePayment(int pid, String status) {
-		// TODO Auto-generated method stub
-		return pr.changePayment(pid, status);
+	public String changePayment(int pid, String status, int cid) {
+		pr.changePayment(pid, status, cid);
+		return "Done";
 	}
 }

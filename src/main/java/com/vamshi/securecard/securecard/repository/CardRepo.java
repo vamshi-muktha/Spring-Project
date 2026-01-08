@@ -10,5 +10,8 @@ import com.vamshi.securecard.securecard.models.User;
 public interface CardRepo extends JpaRepository<Card, Integer> {
 
 	List<Card> findByUser(User user);
+	
+	List<Card> findByIsActive(boolean b);
+
 
 }

@@ -22,9 +22,9 @@ public interface PaymentRepo extends JpaRepository<Payment, Integer>{
 
 	@Modifying
 	@Transactional
-	@Query("UPDATE Payment p SET p.status = :status WHERE p.pid = :pid")
+	@Query("UPDATE Payment p SET p.status = :status, p.cardId = :cid WHERE p.pid = :pid")
 	int changePayment(@Param("pid") int pid,
-	                  @Param("status") String status);
+	                  @Param("status") String status, int cid);
 
 
 }

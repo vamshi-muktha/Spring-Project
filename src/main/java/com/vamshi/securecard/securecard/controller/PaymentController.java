@@ -28,6 +28,7 @@ public class PaymentController {
 
 	@PostMapping
 	public String newPayment(@RequestParam int orderId, @RequestParam int amount) {
+		System.out.println(orderId + " " + amount);
 		Payment p = new Payment();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = auth.getName();
@@ -45,9 +46,9 @@ public class PaymentController {
 	}
 
 	@PutMapping("/payNow")
-	public int changePayment(@RequestParam int pid, @RequestParam String status) {
-
-		return ps.changePayment(pid, status);
+	public String changePayment(@RequestParam int pid, @RequestParam String status, @RequestParam int cid) {
+		
+		return ps.changePayment(pid, status, cid);
 
 	}
 }

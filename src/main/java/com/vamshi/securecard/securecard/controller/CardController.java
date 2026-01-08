@@ -33,10 +33,7 @@ public class CardController {
 	@Autowired
 	UserService us;
 
-	@GetMapping("/api/test")
-	public String testApi() {
-		return "Backend working";
-	}
+	
 
 	@GetMapping
 	public List<Card> getAllCards() {
@@ -90,5 +87,15 @@ public class CardController {
 		} else {
 			return ResponseEntity.notFound().build();
 		}
+	}
+	
+	@PutMapping("/changeStatus/{cid}")
+	public Card changeStatus(@PathVariable int cid) {
+		return cs.changeStatus(cid);
+	}
+	
+	@GetMapping("/activeCards")
+	public List<Card> getActiveCards() {
+		return cs.getActiveCards();
 	}
 }
