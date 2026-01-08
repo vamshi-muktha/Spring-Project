@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.vamshi.securecard.securecard.models.Card;
 import com.vamshi.securecard.securecard.models.User;
@@ -41,5 +42,17 @@ public class CardService {
 	public List<Card> findByUser(User user) {
 		// TODO Auto-generated method stub
 		return cr.findByUser(user);
+	}
+
+	public Card changeStatus(int cid) {
+		Card c = getCardById(cid).get();
+		c.setActive(!c.isActive());
+		cr.save(c);
+		return c;
+	}
+	
+	public List<Card> getActiveCards() {
+//		System.out.println("called");
+		return cr.findByIsActive(true);
 	}
 }
