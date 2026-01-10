@@ -17,7 +17,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cardNumber")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cardNumber")
 public class Card {
 
 	@Id
@@ -36,13 +36,17 @@ public class Card {
 
 	private String PAN;
 
-	private String empStatus; // consider enum
+	private String empStatus; 
 
 	private String monthlyIncome;
 
 	private String cardType;
 
 	private boolean isActive;
+	
+	private int balance;
+	
+	private String cardStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)

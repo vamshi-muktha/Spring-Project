@@ -18,6 +18,9 @@ public class CardService {
 
     @Autowired
     CardRepo cr;
+    
+    @Autowired
+    UserService us;
 
     public List<Card> getAllCards() {
         return cr.findAll();
@@ -54,5 +57,31 @@ public class CardService {
 	public List<Card> getActiveCards() {
 //		System.out.println("called");
 		return cr.findByIsActive(true);
+	}
+
+	public List<Card> getCardsByUserId(int uid) {
+		// TODO Auto-generated method stub
+		User u = us.getById(uid);
+		return findByUser(u);
+		
+	}
+
+	public List<Card> findByCardStatus(String string) {
+		// TODO Auto-generated method stub
+		return cr.findByCardStatus(string);
+	}
+
+	public void acceptCard(int cid) {
+		// TODO Auto-generated method stub
+		getCardById(cid).get().setCardStatus("ACCEPTED");
+		cr.save(getCardById(cid).get());
+		//send mail
+	}
+
+	public void requestCard(int cid) {
+		// TODO Auto-generated method stub
+		getCardById(cid).get().setCardStatus("REJECTED");
+		cr.save(getCardById(cid).get());
+		//send mail
 	}
 }

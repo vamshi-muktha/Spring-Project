@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vamshi.securecard.securecard.models.User;
+import com.vamshi.securecard.securecard.service.CardService;
 import com.vamshi.securecard.securecard.service.UserService;
 
 import jakarta.validation.Valid;
@@ -29,6 +30,9 @@ public class UserController {
 
 	@Autowired
 	UserService service;
+	
+	@Autowired
+	CardService cs;
 
 	@GetMapping("/api/auth/check")
 	public ResponseEntity<?> getCurrentUser(Authentication authentication) {
@@ -85,6 +89,7 @@ public class UserController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+		
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}

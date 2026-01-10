@@ -13,5 +13,5 @@ public interface CardRepo extends JpaRepository<Card, Integer> {
 	
 	List<Card> findByIsActive(boolean b);
 
-
+	List<Card> findByCardStatus(String string);
 }

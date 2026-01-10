@@ -54,20 +54,20 @@ public class CardController {
 		return new ResponseEntity<>(cards, HttpStatus.OK);
 	}
 
-	@PostMapping()
-	public Card createCard(@Valid @RequestBody Card card) {
-
-		// 🔥 Extract userId safely
-		int userId = card.getUser().getId();
-
-		// 🔥 Fetch MANAGED user
-		User managedUser = us.getById(userId);
-
-		// 🔥 Replace detached user with managed user
-		card.setUser(managedUser);
-
-		return cs.saveCard(card);
-	}
+//	@PostMapping()
+//	public Card createCard(@Valid @RequestBody Card card) {
+//
+//		// 🔥 Extract userId safely
+//		int userId = card.getUser().getId();
+//
+//		// 🔥 Fetch MANAGED user
+//		User managedUser = us.getById(userId);
+//
+//		// 🔥 Replace detached user with managed user
+//		card.setUser(managedUser);
+//
+//		return cs.saveCard(card);
+//	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Card> updateCard(@PathVariable int id, @Valid @RequestBody Card card) {

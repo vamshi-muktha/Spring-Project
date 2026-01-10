@@ -95,6 +95,21 @@ public class JspController {
 		Card c = new Card();
 		BeanUtils.copyProperties(card, c);
 		c.setCardExpiry("01/2030");
+		if(c.getType().equals("debit")) {
+			c.setBalance(0);
+		}
+		else {
+			if(c.getCardType().equalsIgnoreCase("platinum")) {
+				c.setBalance(100000);
+			}
+			if(c.getCardType().equalsIgnoreCase("gold")) {
+				c.setBalance(50000);
+			}
+			if(c.getCardType().equalsIgnoreCase("silver")) {
+				c.setBalance(30000);
+			}
+		}
+		c.setCardStatus("PENDING");
 		User u = service.findByUsername(username);
 		c.setUser(u);
 		c.setCardName(u.getName());
