@@ -26,5 +26,7 @@ public interface PaymentRepo extends JpaRepository<Payment, Integer>{
 	int changePayment(@Param("pid") int pid,
 	                  @Param("status") String status, int cid);
 
+	List<Payment> findByCardId(int cid);
+
 
 }

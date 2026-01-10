@@ -2,6 +2,7 @@ package com.vamshi.securecard.securecard.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vamshi.securecard.securecard.models.Card;
@@ -33,7 +35,8 @@ public class CardController {
 	@Autowired
 	UserService us;
 
-	
+	@Autowired
+	UserController uc;
 
 	@GetMapping
 	public List<Card> getAllCards() {
@@ -96,6 +99,21 @@ public class CardController {
 	
 	@GetMapping("/activeCards")
 	public List<Card> getActiveCards() {
-		return cs.getActiveCards();
+		List<Card> al =  cs.getActiveCards();
+		int uid = uc.getCurrUser().getId();
+		al = al.stream().filter(x -> x.getUser().getId() == uid).filter(x -> x.getCardStatus().equals("ACCEPTED")).collect(Collectors.toList());
+		return al;
+	}
+	
+	@PutMapping("/updateBalance/{cid}/{amt}")
+	public String updateBalance(@PathVariable int cid,@PathVariable int amt) {
+		cs.updateBalance(cid, amt);
+		return "Updated";
+	}
+	
+	@PutMapping("/updateType/{cid}")
+	public String updateType(@PathVariable int cid, @RequestParam String newType) {
+		cs.updateType(cid, newType);
+		return "Updated";
 	}
 }

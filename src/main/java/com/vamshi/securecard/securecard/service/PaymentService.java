@@ -27,4 +27,9 @@ public class PaymentService {
 		pr.changePayment(pid, status, cid);
 		return "Done";
 	}
+
+	public List<Payment> getByCid(int cid) {
+		// TODO Auto-generated method stub
+		return pr.findByCardId(cid);
+	}
 }

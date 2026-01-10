@@ -84,4 +84,16 @@ public class CardService {
 		cr.save(getCardById(cid).get());
 		//send mail
 	}
+
+	public void updateBalance(int cid, int amt) {
+		// TODO Auto-generated method stub
+		getCardById(cid).get().setBalance(amt);
+		cr.save(getCardById(cid).get());
+	}
+
+	public void updateType(int cid, String newType) {
+		// TODO Auto-generated method stub
+		getCardById(cid).get().setCardType(newType);
+		cr.save(getCardById(cid).get());
+	}
 }

@@ -95,7 +95,7 @@ public class JspController {
 		Card c = new Card();
 		BeanUtils.copyProperties(card, c);
 		c.setCardExpiry("01/2030");
-		if(c.getType().equals("debit")) {
+		if(c.getType().equals("Debit")) {
 			c.setBalance(0);
 		}
 		else {
