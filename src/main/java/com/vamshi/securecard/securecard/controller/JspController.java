@@ -2,12 +2,8 @@ package com.vamshi.securecard.securecard.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password4j.BcryptPassword4jPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,8 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.vamshi.securecard.securecard.api.MailFeignClient;
 import com.vamshi.securecard.securecard.dto.CardDto;
-import com.vamshi.securecard.securecard.dto.UserDto;
+import com.vamshi.securecard.securecard.dto.MailRequest;
 import com.vamshi.securecard.securecard.models.Card;
 import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.service.CardService;
@@ -32,6 +29,9 @@ public class JspController {
 
 	@Autowired
 	CardService cs;
+	
+	@Autowired
+	MailFeignClient mfc;
 
 	@GetMapping("/home")
 	public String getHome() {
@@ -58,30 +58,30 @@ public class JspController {
 		return "external";
 	}
 
-	@PostMapping("/register")
-	public String register(@Valid @ModelAttribute("user") UserDto user,Model model, BindingResult result) {
-
-		if (result.hasErrors()) {
-			return "register";
-		}
-		if (service.existsByEmail(user.getEmail())) {
-			model.addAttribute("msg", "User already exists. Please login.");
-			return "login";
-		}
-		PasswordEncoder encoder = new BcryptPassword4jPasswordEncoder();
-		String enc = encoder.encode(user.getPassword());
-
-		User u = new User();
-		BeanUtils.copyProperties(user, u);
-		u.setRole("USER");
-		u.setPassword(enc);
-		u.setOriginalPassword(user.getPassword());
-
-		User x = service.create(u);
-
-		model.addAttribute("msg", "Registration successful. Please login.");
-		return "login";
-	}
+//	@PostMapping("/register")
+//	public String register(@Valid @ModelAttribute("user") UserDto user,Model model, BindingResult result) {
+//
+//		if (result.hasErrors()) {
+//			return "register";
+//		}
+//		if (service.existsByEmail(user.getEmail())) {
+//			model.addAttribute("msg", "User already exists. Please login.");
+//			return "login";
+//		}
+//		PasswordEncoder encoder = new BcryptPassword4jPasswordEncoder();
+//		String enc = encoder.encode(user.getPassword());
+//
+//		User u = new User();
+//		BeanUtils.copyProperties(user, u);
+//		u.setRole("USER");
+//		u.setPassword(enc);
+//		u.setOriginalPassword(user.getPassword());
+//
+//		User x = service.create(u);
+//
+//		model.addAttribute("msg", "Registration successful. Please login.");
+//		return "login";
+//	}
 
 	@PostMapping("/applyCard")
 	public String applyCard(@Valid @ModelAttribute CardDto card, Model model, BindingResult result) {
@@ -120,6 +120,8 @@ public class JspController {
 		c.setActive(true);
 		System.out.println("called");
 		cs.saveCard(c);
+		mfc.sendMail(new MailRequest(u.getEmail(), "New Card Applied", "Card Details : no : " + c.getCardNumber() + " cvv : " + c.getCardCVV() + " Waiting for admin approval"));
+		mfc.sendMail(new MailRequest("mukthavamshi123@gmail.com", "New Card request", u.getUsername() + " applied card"));
 		model.addAttribute("msg", "Card Applied successfully");
 		return "Home";
 

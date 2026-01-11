@@ -24,6 +24,10 @@ public class PaymentService {
 	}
 
 	public String changePayment(int pid, String status, int cid) {
+		if(cid == -1) {
+			pr.rejectPayment(pid, status);
+			return "Rejected";
+		}
 		pr.changePayment(pid, status, cid);
 		return "Done";
 	}

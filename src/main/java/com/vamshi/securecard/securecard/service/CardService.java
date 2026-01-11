@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.vamshi.securecard.securecard.api.MailFeignClient;
+import com.vamshi.securecard.securecard.dto.MailRequest;
 import com.vamshi.securecard.securecard.models.Card;
 import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.repository.CardRepo;
@@ -21,8 +23,12 @@ public class CardService {
     
     @Autowired
     UserService us;
+    
+    @Autowired
+    MailFeignClient mfc;
 
     public List<Card> getAllCards() {
+    	
         return cr.findAll();
     }
 

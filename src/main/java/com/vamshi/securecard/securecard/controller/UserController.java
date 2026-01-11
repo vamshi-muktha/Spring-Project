@@ -2,6 +2,7 @@ package com.vamshi.securecard.securecard.controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,15 +10,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password4j.BcryptPassword4jPasswordEncoder;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vamshi.securecard.securecard.api.MailFeignClient;
+import com.vamshi.securecard.securecard.api.OtpFeignClient;
+import com.vamshi.securecard.securecard.dto.MailRequest;
+import com.vamshi.securecard.securecard.dto.UserDto;
 import com.vamshi.securecard.securecard.models.User;
 import com.vamshi.securecard.securecard.service.CardService;
 import com.vamshi.securecard.securecard.service.UserService;
@@ -33,6 +42,12 @@ public class UserController {
 	
 	@Autowired
 	CardService cs;
+	
+	@Autowired
+	OtpFeignClient ofc;
+	
+	@Autowired
+	MailFeignClient mfc;
 
 	@GetMapping("/api/auth/check")
 	public ResponseEntity<?> getCurrentUser(Authentication authentication) {
@@ -52,6 +67,33 @@ public class UserController {
 		System.out.println(username);
 		return service.findByUsername(username);
 	}
+	
+	@PostMapping("/register")
+	public String register(@Valid @ModelAttribute("user") UserDto user,Model model, BindingResult result) {
+
+		if (result.hasErrors()) {
+			return "Errors";
+		}
+		if (service.existsByEmail(user.getEmail())) {
+			return "User Exists with given email";
+		}
+		
+		ofc.sendOtp(user.getEmail());
+		return "Otp sent";
+//		PasswordEncoder encoder = new BcryptPassword4jPasswordEncoder();
+//		String enc = encoder.encode(user.getPassword());
+//
+//		User u = new User();
+//		BeanUtils.copyProperties(user, u);
+//		u.setRole("USER");
+//		u.setPassword(enc);
+//		u.setOriginalPassword(user.getPassword());
+//
+//		User x = service.create(u);
+//
+//		model.addAttribute("msg", "Registration successful. Please login.");
+//		return "login";
+	}
 
     /*@PostMapping("/register")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
@@ -65,7 +107,23 @@ public class UserController {
         User savedUser = service.create(user);
         return ResponseEntity.status(201).body(savedUser);
     }*/
+	
+	@PostMapping("/verify")
+	public boolean verifyOtp(@RequestBody UserDto user, @RequestParam String otp) {
+		boolean res = ofc.verifyOtp(user.getEmail(), otp);
+		PasswordEncoder encoder = new BcryptPassword4jPasswordEncoder();
+		String enc = encoder.encode(user.getPassword());
 
+		User u = new User();
+		BeanUtils.copyProperties(user, u);
+		u.setRole("USER");
+		u.setPassword(enc);
+		u.setOriginalPassword(user.getPassword());
+
+		User x = service.create(u);
+		mfc.sendMail(new MailRequest(x.getEmail(), "Welcome to SecureCard", "thank you for subscribing to secure card"));
+		return res;
+	}
 	@GetMapping("/getUsers")
 	public ResponseEntity<List<User>> getAllUsers() {
 		return ResponseEntity.ok(service.getAll());
@@ -93,4 +151,5 @@ public class UserController {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+	
 }

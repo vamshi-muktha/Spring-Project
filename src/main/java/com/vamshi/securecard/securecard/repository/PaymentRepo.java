@@ -25,6 +25,12 @@ public interface PaymentRepo extends JpaRepository<Payment, Integer>{
 	@Query("UPDATE Payment p SET p.status = :status, p.cardId = :cid WHERE p.pid = :pid")
 	int changePayment(@Param("pid") int pid,
 	                  @Param("status") String status, int cid);
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE Payment p SET p.status = :status WHERE p.pid = :pid")
+	int rejectPayment(@Param("pid") int pid,
+	                  @Param("status") String status);
 
 	List<Payment> findByCardId(int cid);
 

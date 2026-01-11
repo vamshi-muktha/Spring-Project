@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vamshi.securecard.securecard.api.MailFeignClient;
+import com.vamshi.securecard.securecard.api.OtpFeignClient;
+import com.vamshi.securecard.securecard.dto.MailRequest;
 import com.vamshi.securecard.securecard.models.Payment;
 import com.vamshi.securecard.securecard.service.CardService;
 import com.vamshi.securecard.securecard.service.PaymentService;
@@ -32,6 +35,12 @@ public class PaymentController {
 	
 	@Autowired
 	CardService cs;
+	
+	@Autowired
+	OtpFeignClient ofc;
+	
+	@Autowired
+	MailFeignClient mfc;
 
 	@PostMapping
 	public String newPayment(@RequestParam int orderId, @RequestParam int amount) {
@@ -55,13 +64,27 @@ public class PaymentController {
 	@PutMapping("/payNow")
 	public ResponseEntity<String> changePayment(@RequestParam int pid,@RequestParam int amt, @RequestParam String status, @RequestParam int cid) {
 		System.out.println(pid + " " + cid);
+		if (cid == -1 || "REJECTED".equals(status)) {
+		    return ResponseEntity.ok(ps.changePayment(pid, status, cid));
+		}
+
 		if(cs.getCardById(cid).get().getBalance() < amt) {
 			return new ResponseEntity<>("Amount low in that card try with another card", HttpStatus.OK);
 		}
-		cs.updateBalance(cid, cs.getCardById(cid).get().getBalance() - amt);
-		
-		return ResponseEntity.ok(ps.changePayment(pid, status, cid));
+		ofc.sendOtp(cs.getCardById(cid).get().getUser().getEmail());
+		return new ResponseEntity<>("OTP_REQUIRED", HttpStatus.OK);
+//		cs.updateBalance(cid, cs.getCardById(cid).get().getBalance() - amt);
+//		
+//		return ResponseEntity.ok(ps.changePayment(pid, status, cid));
 
+	}
+	@PostMapping("/verify")
+	public boolean verifyOtp(@RequestParam String email, @RequestParam String otp, @RequestParam int cid, @RequestParam int pid, @RequestParam int amount, @RequestParam String status) {
+		boolean res =  ofc.verifyOtp(email, otp);
+		if(res)cs.updateBalance(cid, cs.getCardById(cid).get().getBalance() - amount);
+		if(res)ps.changePayment(pid, status, cid);
+		if(res)mfc.sendMail(new MailRequest(email, "Payment done successfully", "payment successful"));
+		return res;
 	}
 	
 	@GetMapping("/{cid}/transactions")
