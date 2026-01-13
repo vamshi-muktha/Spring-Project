@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.vamshi.securecard.securecard.dto.MailRequest;
 
-@FeignClient(name = "MAILSERVICE")
+@FeignClient(name = "mail-service", url = "${mail.service.url}")
 public interface MailFeignClient {
 
     @PostMapping("/mail/send")

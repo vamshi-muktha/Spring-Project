@@ -188,104 +188,102 @@ public class Config {
 		return dp;
 	}
 
-//	@Bean
-//	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//
-//		http.cors(Customizer.withDefaults())
-//
-//				// 2️⃣ CSRF (disable for SPA)
-//				.csrf(csrf -> csrf.disable())
-//
-//				// 3️⃣ Exception handling (API-friendly)
-//				.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
-//					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//				})).authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/users/register", "/users/**", "/otp/**", "/oauth2/**",
-//						"/login/oauth2/**", "/WEB-INF/**", "/register", "/.well-known/**").permitAll()
-////                        .requestMatchers("/cards").authenticated()
-//						.anyRequest().authenticated())
-//
-//				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/home")
-//						.permitAll())
-//
-//				.oauth2Login(oauth -> oauth.loginPage("/login").successHandler(oAuthSuccessHandler))
-//
-//				// 🚪 Logout
-//				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
-//						.clearAuthentication(true).deleteCookies("JSESSIONID"));
-//
-//		return http.build();
-//	}
-	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-	    http
-	        .cors(Customizer.withDefaults())
-	        .csrf(csrf -> csrf.disable())
+		http.cors(Customizer.withDefaults())
 
-	        .exceptionHandling(ex -> ex
-	            .authenticationEntryPoint((request, response, authException) -> {
-	                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-	            })
-	        )
+				.csrf(csrf -> csrf.disable())
 
-	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers(
-	                "/securecard/login",
-	                "/securecard/register",
-	                "/securecard/users/**",
-	                "/securecard/otp/**",
-	                "/oauth2/**",
-	                "/login/oauth2/**"
-	            ).permitAll()
-	            .anyRequest().authenticated()
-	        )
+				.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				})).authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/users/register", "/users/**", "/otp/**", "/oauth2/**",
+						"/login/oauth2/**", "/WEB-INF/**", "/register", "/.well-known/**").permitAll()
+//                        .requestMatchers("/cards").authenticated()
+						.anyRequest().authenticated())
 
-	        // SPA + Gateway login
-	        .formLogin(form -> form
-	            .loginProcessingUrl("/securecard/login")
-	            .successHandler((req, res, auth) -> res.setStatus(200))   // REST style
-	            .failureHandler((req, res, ex) -> res.setStatus(401))
-	        )
+				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/home")
+						.permitAll())
 
-	        // Google login
-	        .oauth2Login(oauth -> oauth
-	            .loginPage("/securecard/login")
-	            .successHandler(oAuthSuccessHandler)
-	        )
+				.oauth2Login(oauth -> oauth.loginPage("/login").successHandler(oAuthSuccessHandler))
 
-	        // Logout
-	        .logout(logout -> logout
-	            .logoutUrl("/securecard/logout")
-	            .logoutSuccessUrl("/securecard/login")
-	            .invalidateHttpSession(true)
-	            .clearAuthentication(true)
-	            .deleteCookies("JSESSIONID")
-	        );
+				// 🚪 Logout
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
+						.clearAuthentication(true).deleteCookies("JSESSIONID"));
 
-	    return http.build();
+		return http.build();
 	}
-
-
-//	@Bean
-//	public CorsConfigurationSource corsConfigurationSource() {
-//
-//		CorsConfiguration config = new CorsConfiguration();
-//		config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
-//		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//		config.setAllowedHeaders(List.of("*"));
-//		config.setAllowCredentials(true);
-//
-//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//		source.registerCorsConfiguration("/**", config);
-//
-//		return source;
-//	}
 	
+//	@Bean
+//	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//
+//	    http
+//	        .cors(Customizer.withDefaults())
+//	        .csrf(csrf -> csrf.disable())
+//
+//	        .exceptionHandling(ex -> ex
+//	            .authenticationEntryPoint((request, response, authException) -> {
+//	                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//	            })
+//	        )
+//
+//	        .authorizeHttpRequests(auth -> auth
+//	            .requestMatchers(
+//	                "/securecard/login",
+//	                "/securecard/register",
+//	                "/securecard/users/**",
+//	                "/securecard/otp/**",
+//	                "/oauth2/**",
+//	                "/login/oauth2/**"
+//	            ).permitAll()
+//	            .anyRequest().authenticated()
+//	        )
+//
+//	        // SPA + Gateway login
+//	        .formLogin(form -> form
+//	            .loginProcessingUrl("/securecard/login")
+//	            .successHandler((req, res, auth) -> res.setStatus(200))   // REST style
+//	            .failureHandler((req, res, ex) -> res.setStatus(401))
+//	        )
+//
+//	        // Google login
+//	        .oauth2Login(oauth -> oauth
+//	            .loginPage("/securecard/login")
+//	            .successHandler(oAuthSuccessHandler)
+//	        )
+//
+//	        // Logout
+//	        .logout(logout -> logout
+//	            .logoutUrl("/securecard/logout")
+//	            .logoutSuccessUrl("/securecard/login")
+//	            .invalidateHttpSession(true)
+//	            .clearAuthentication(true)
+//	            .deleteCookies("JSESSIONID")
+//	        );
+//
+//	    return http.build();
+//	}
+
+
 	@Bean
-	public ForwardedHeaderFilter forwardedHeaderFilter() {
-	    return new ForwardedHeaderFilter();
+	public CorsConfigurationSource corsConfigurationSource() {
+
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+
+		return source;
 	}
+	
+//	@Bean
+//	public ForwardedHeaderFilter forwardedHeaderFilter() {
+//	    return new ForwardedHeaderFilter();
+//	}
 
 
 }
