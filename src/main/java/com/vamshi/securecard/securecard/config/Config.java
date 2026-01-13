@@ -202,13 +202,13 @@ public class Config {
 //                        .requestMatchers("/cards").authenticated()
 						.anyRequest().authenticated())
 
-				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/home")
-						.permitAll())
-//				.formLogin(form -> form
-//					    .loginProcessingUrl("/login")
-//					    .successHandler((req, res, auth) -> res.setStatus(200))
-//					    .failureHandler((req, res, ex) -> res.setStatus(401))
-//					)
+//				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/home")
+//						.permitAll())
+				.formLogin(form -> form
+					    .loginProcessingUrl("/login")
+					    .successHandler((req, res, auth) -> res.setStatus(200))
+					    .failureHandler((req, res, ex) -> res.setStatus(401))
+					)
 
 
 				.oauth2Login(oauth -> oauth.loginPage("/login").successHandler(oAuthSuccessHandler))
