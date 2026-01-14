@@ -56,7 +56,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             System.out.println("Useeee" + x.toString());
         }
 
-        response.sendRedirect("http://localhost:3000/home");
+        response.sendRedirect("http://spring-project-frontend.vercel.app/home");
     }
 }
 
